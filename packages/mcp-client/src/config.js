@@ -105,7 +105,7 @@ export const biteV2Sandbox = defineChain({
 
 export const SERVER_URL = process.env.SUPERPAGE_SERVER || "http://localhost:3001";
 export const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY;
-export const NETWORK = process.env.X402_CHAIN || process.env.ETH_NETWORK || "base-sepolia";
+export const NETWORK = process.env.X402_CHAIN || process.env.ETH_NETWORK || "initia-testnet";
 export const CURRENCY = process.env.X402_CURRENCY || "USDC";
 export const TOKEN_ADDRESS = process.env.X402_TOKEN_ADDRESS || "";
 export const TOKEN_DECIMALS = (() => {
@@ -137,6 +137,15 @@ export const CHAINS = {
   "cronos-testnet": cronosTestnet,
   "cronos": cronosMainnet,
   "bite-v2-sandbox": biteV2Sandbox,
+  "initia-testnet": defineChain({
+    id: 3981013683081008,
+    name: "SuperPage Rollup (Initia MiniEVM)",
+    nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
+    rpcUrls: {
+      default: { http: [process.env.INITIA_RPC_URL || "http://0.0.0.0:8545"] },
+    },
+    testnet: true,
+  }),
 };
 
 // Token contract addresses (will be resolved from network and currency if not set)
@@ -175,6 +184,9 @@ export const TOKEN_ADDRESSES = {
   },
   "bite-v2-sandbox": {
     USDC: "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8",
+  },
+  "initia-testnet": {
+    USDC: "0x06d1a12b351cab22727515c1f4fec2544f42d751",
   },
 };
 
