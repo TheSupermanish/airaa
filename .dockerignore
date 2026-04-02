@@ -1,43 +1,37 @@
-# Dependencies
+# Dependencies (reinstalled in Docker)
 node_modules
 **/node_modules
 
-# Build outputs
+# Build outputs (rebuilt in Docker)
 dist
 .next
+packages/contracts/artifacts
+packages/contracts/cache
 
 # Git
 .git
-.gitignore
 
-# Environment files
-.env
-.env.*
-!.env.production.example
-
-# Packages not needed for deployment
-packages/ai-agent
-packages/contracts
-packages/mcp-client
-
-# Test files
-**/*.test.ts
-**/__tests__
-**/test-*.ts
-**/buy-product-eth.ts
+# Data dumps
+data/
 
 # IDE / OS
 .vscode
 .idea
 .DS_Store
-*.swp
-*.swo
 
-# Docker
-docker-compose.yml
+# Docker (don't copy into itself)
 Dockerfile
-deploy.sh
+docker-compose.yml
+docker-compose.prod.yml
 
-# Docs
-*.md
-LICENSE
+# Test files
+**/__tests__
+**/*.test.ts
+**/test-*.ts
+
+# Local env (production env injected via docker-compose)
+.env
+packages/backend/.env
+packages/frontend/.env.local
+packages/ai-agent/.env
+packages/contracts/.env
