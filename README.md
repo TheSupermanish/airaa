@@ -2,18 +2,36 @@
 
 # InitPage
 
-### **AI-Native Commerce Platform — The Era of AI Commerce**
+### **The Internet's Missing Payment Layer for AI**
 
-*An AI-native commerce platform where autonomous agents and humans buy, sell, and monetize digital resources — running on its own Initia appchain with trustless on-chain payments.*
+*Where AI agents and humans buy, sell, and earn — from digital APIs to physical Shopify products — on a dedicated Initia appchain.*
 
 [![Initia](https://img.shields.io/badge/Initia-Appchain-00D4AA)](https://initia.xyz)
-[![x402 Protocol](https://img.shields.io/badge/x402-Enabled-blue)](https://x402.org)
+[![x402 Protocol](https://img.shields.io/badge/x402-HTTP%20402-blue)](https://x402.org)
 [![ERC-8004](https://img.shields.io/badge/ERC--8004-Agent%20Identity-purple)](https://eips.ethereum.org/EIPS/eip-8004)
-[![MCP Protocol](https://img.shields.io/badge/MCP-12%20Tools-orange)](https://modelcontextprotocol.io)
+[![MCP](https://img.shields.io/badge/MCP-Claude%20Desktop-orange)](https://modelcontextprotocol.io)
+[![A2A](https://img.shields.io/badge/A2A-Agent%20to%20Agent-green)]()
+[![Live](https://img.shields.io/badge/Live-init.superpa.ge-brightgreen)](https://init.superpa.ge)
 
 **INITIATE Hackathon (Season 1) — AI & Tooling Track**
 
+[Live Demo](https://init.superpa.ge) | [API](https://init-api.superpa.ge/health) | [Agent Card](https://init-api.superpa.ge/.well-known/agent.json)
+
 </div>
+
+---
+
+## What is InitPage?
+
+AI agents can reason, plan, and write code — but they can't **buy** or **sell** anything. InitPage fixes that.
+
+It's a full commerce platform where:
+- **Agents buy** — APIs, articles, datasets, and even physical products from Shopify stores
+- **Agents sell** — Register as merchants, publish paywalled services, earn USDC from other agents and humans
+- **Everyone builds reputation** — On-chain identity via ERC-8004, not self-reported claims
+- **Every payment is verifiable** — USDC on-chain, verified via x402 (HTTP 402 protocol)
+
+Think of it as **Shopify + RapidAPI + Fiverr, but for AI agents** — running on its own Initia appchain.
 
 ---
 
@@ -23,13 +41,23 @@
 
 ### Project Overview
 
-InitPage is an AI-native commerce platform where autonomous AI agents and humans buy, sell, and monetize digital resources using on-chain USDC micro-payments. It solves the problem that AI agents cannot transact autonomously — they can research and plan but can't purchase APIs, datasets, or digital content without human intervention. Built for AI developers and content creators, InitPage provides a trustless marketplace where every payment is verified on-chain, agents build reputation through ERC-8004 identity, and the entire platform runs on its own Initia appchain for maximum revenue capture.
+InitPage is an AI-native commerce platform where autonomous AI agents and humans buy, sell, and monetize digital resources AND physical products using on-chain USDC payments. AI agents can't transact autonomously today — they can research and plan but can't purchase APIs, datasets, or products without human intervention. Creators and merchants have no way to sell to the fastest-growing customer segment: autonomous AI agents. InitPage solves both sides: agents discover and pay for resources via standard protocols (x402, MCP, A2A), while creators monetize APIs, articles, files, and Shopify stores for both human and AI customers. Agents aren't just buyers — they can register as sellers, publish their own services, and earn revenue. Every participant builds verifiable on-chain reputation through ERC-8004 identity, and the entire platform runs on its own Initia appchain with session keys for frictionless autonomous transactions.
 
-### Implementation Detail
+### Custom Implementation
 
-- **The Custom Implementation**: InitPage implements a complete agent commerce stack: x402 HTTP 402 payment-gated resources, ERC-8004 on-chain agent identity (IdentityRegistry, ReputationRegistry, ValidationRegistry), A2A agent-to-agent protocol, MCP integration with 12 autonomous tools for Claude Desktop, and a multi-LLM CLI agent (Anthropic/OpenAI/Google). Smart contracts are deployed on our MiniEVM rollup (MockUSDC + 3 ERC-8004 registries). The marketplace supports APIs (proxied with live data), articles (markdown), and file downloads — each with different access models (pay-per-request for APIs, buy-once for articles/files).
+InitPage implements a complete agent commerce stack from scratch:
 
-- **The Native Feature**: InitPage uses **Auto-signing (Session Keys)** to enable frictionless agent transactions. When enabled, AI agents can purchase resources without requiring a wallet confirmation popup for each transaction — they sign once and trade freely. This is implemented via InterwovenKit's `enableAutoSign` configuration and exposed through a toggle in the wallet dropdown UI. The UX improvement is critical for autonomous agents: without session keys, every purchase would require human wallet approval, defeating the purpose of autonomous commerce.
+- **x402 Payment Gateway** — HTTP 402 payment-gated resources with on-chain USDC verification. Three resource types: APIs (proxied with live upstream data), articles (markdown), and file downloads — each with different access models.
+- **ERC-8004 On-Chain Identity** — Three Solidity contracts (IdentityRegistry, ReputationRegistry, ValidationRegistry) giving agents verifiable identity, feedback scores, and third-party attestations.
+- **A2A Protocol Server** — JSON-RPC 2.0 agent-to-agent communication with payment negotiation, AP2 Google shopping mandates, and task lifecycle management.
+- **MCP Server** — 12 autonomous tools for Claude Desktop: browse, buy, sell, check reputation, manage Shopify orders.
+- **Multi-LLM CLI Agent** — Standalone agent supporting Anthropic, OpenAI, and Google models with autonomous buying AND selling capabilities.
+- **Shopify Integration** — Real-world physical product commerce. AI agents can browse stores, select products, provide shipping details, and complete checkout with USDC — bridging crypto payments to physical goods.
+- **Creator Economy** — Agents and humans register as merchants, set up profiles, publish paywalled resources, and earn from both AI and human customers.
+
+### Native Feature
+
+InitPage uses **Auto-signing (Session Keys)** to enable frictionless agent transactions. When enabled via InterwovenKit's `enableAutoSign`, AI agents sign once and trade freely — no wallet confirmation popup per purchase. This is critical for autonomous commerce: without session keys, every API call or resource purchase would require human wallet approval, defeating the entire purpose. Exposed through a toggle in the wallet dropdown UI.
 
 ### How to Run Locally
 
@@ -47,196 +75,204 @@ InitPage is an AI-native commerce platform where autonomous AI agents and humans
 
 3. **Start the application:**
    ```bash
-   pnpm --filter backend dev   # Backend on http://localhost:1337
-   pnpm --filter frontend dev  # Frontend on http://localhost:3000
+   cp packages/backend/.env.sample packages/backend/.env  # Edit with your keys
+   ./dev.sh  # Starts frontend (:3000) + backend (:1337) + SDK
    ```
 
-4. **Connect and test:** Open http://localhost:3000, connect via InterwovenKit (social login or MetaMask), and explore the marketplace.
+4. **Connect and test:** Open http://localhost:3000, connect via InterwovenKit, explore the marketplace, buy a resource, or register as a creator.
 
-### Deployed Contracts (on InitPage Rollup)
+### Deployed Contracts (InitPage Rollup — MiniEVM)
 
-| Contract | Address | Chain |
-|----------|---------|-------|
-| MockUSDC | `0x06d1a12b351cab22727515c1f4fec2544f42d751` | initpage |
-| IdentityRegistry (ERC-8004) | `0x4c40c94680ad6a137e033356a3fccd6eb1b2d02d` | initpage |
-| ReputationRegistry (ERC-8004) | `0x0aa5c9ddda3d7d0d3f3415d31fa495a3a1f83847` | initpage |
-| ValidationRegistry (ERC-8004) | `0x1027c50cf44a931c41740fa2114c0c4f9719235e` | initpage |
+| Contract | Address |
+|----------|---------|
+| MockUSDC (ERC-20) | `0x06d1a12b351cab22727515c1f4fec2544f42d751` |
+| IdentityRegistry (ERC-8004) | `0x4c40c94680ad6a137e033356a3fccd6eb1b2d02d` |
+| ReputationRegistry (ERC-8004) | `0x0aa5c9ddda3d7d0d3f3415d31fa495a3a1f83847` |
+| ValidationRegistry (ERC-8004) | `0x1027c50cf44a931c41740fa2114c0c4f9719235e` |
 
 ---
 
-## The Problem
+## Why This Matters
 
-AI agents can research, write, and plan — but they can't **buy** or **sell** anything. Premium APIs, gated content, and digital resources are locked behind human payment flows. There's no standard way for an autonomous agent to discover a resource, pay for it, or monetize its own creations.
+| Today | With InitPage |
+|-------|---------------|
+| Agent needs weather data → hits paywall → stops | Agent discovers API → pays $0.05 USDC → gets data → continues |
+| Creator sells API on RapidAPI → humans only | Creator lists API → AI agents buy it 24/7 autonomously |
+| Agent can't buy physical products | Agent browses Shopify → pays USDC → ships to user |
+| No way to verify if an agent is trustworthy | Check on-chain reputation score before transacting |
+| Agent earns nothing for its capabilities | Agent registers as seller → publishes services → earns USDC |
 
-## The Solution
+---
 
-InitPage is an **agent commerce chain** — a dedicated Initia appchain where AI agents and humans operate as both buyers and sellers in a trustless marketplace.
-
-**Why an appchain?** Every transaction on InitPage generates revenue for the platform, not gas fees leaked to a shared chain. Session keys let agents transact autonomously without wallet popups. The Interwoven Bridge lets users deposit from any chain in the Initia ecosystem.
-
-### How It Works
+## How It Works
 
 ```
-1. Agent discovers a resource on the marketplace       → search / list-resources
-2. Agent previews the price (no payment)                → 402 Payment Required
-3. Agent confirms with user                             → "Buy Weather API for $0.50 USDC?"
-4. Agent pays USDC on the InitPage appchain               → on-chain ERC-20 transfer
-5. Server verifies payment and delivers content         → 200 OK + data
-6. Transaction recorded on-chain with receipt           → verifiable proof
+                    ┌─────────────────────────────┐
+                    │        AGENT SURFACES        │
+                    │                              │
+                    │  Claude Desktop (MCP)        │
+                    │  CLI Agent (multi-LLM)       │
+                    │  Web Browser (Next.js)       │
+                    │  Any A2A-compatible agent     │
+                    └──────────┬───────────────────┘
+                               │
+                    ┌──────────▼───────────────────┐
+                    │     InitPage Backend          │
+                    │                               │
+                    │  x402 Gateway ── pay-per-use  │
+                    │  A2A Server  ── agent comms   │
+                    │  MCP Server  ── Claude tools  │
+                    │  ERC-8004    ── identity      │
+                    │  Shopify     ── real products │
+                    │  Creator API ── sell & earn   │
+                    └──────────┬───────────────────┘
+                               │
+                    ┌──────────▼───────────────────┐
+                    │    InitPage Appchain          │
+                    │    (Initia MiniEVM)           │
+                    │                               │
+                    │  USDC payments  ── instant    │
+                    │  ERC-8004 NFTs  ── identity   │
+                    │  Session keys   ── auto-sign  │
+                    │  ~500ms blocks  ── fast       │
+                    └──────────┬───────────────────┘
+                               │
+                    ┌──────────▼───────────────────┐
+                    │    Initia L1 (testnet)        │
+                    │    Interwoven Bridge          │
+                    │    Cross-chain deposits       │
+                    └──────────────────────────────┘
 ```
 
-### Agent Surfaces
+### The x402 Payment Flow
 
-- **Telegram Bot** — via OpenClaw gateway
-- **Claude Desktop** — via MCP server (12 autonomous tools)
-- **CLI Agent** — multi-LLM support (Anthropic, OpenAI, Google)
-- **Web Marketplace** — Next.js frontend with InterwovenKit
+```
+Agent                      InitPage                  Blockchain
+  │                           │                          │
+  │  GET /resource/weather    │                          │
+  │──────────────────────────>│                          │
+  │                           │                          │
+  │  402 {pay $0.50 USDC}     │                          │
+  │<──────────────────────────│                          │
+  │                           │                          │
+  │  USDC.transfer()          │                          │
+  │───────────────────────────┼─────────────────────────>│
+  │                           │                          │
+  │  GET /resource/weather    │    verify tx on-chain    │
+  │  + X-PAYMENT: {txHash}    │─────────────────────────>│
+  │──────────────────────────>│<─────────────────────────│
+  │                           │                          │
+  │  200 OK + weather data    │                          │
+  │<──────────────────────────│                          │
+```
 
 ---
 
 ## Why Initia
 
-InitPage leverages Initia's unique capabilities that aren't available on shared chains:
-
-| Feature | How InitPage Uses It |
-|---------|----------------------|
-| **Own Appchain** | Every marketplace transaction = platform revenue. No gas leakage to L1. |
-| **Session Keys (AutoSign)** | AI agents transact autonomously — sign once, trade freely. No wallet popup per purchase. |
-| **Interwoven Bridge** | Users deposit USDC from any Initia ecosystem chain. No manual bridging. |
-| **Initia Usernames (.init)** | Agent profiles display `.init` names instead of hex addresses. |
-| **Social Login (Privy)** | Users onboard with email/Google — no wallet setup needed. |
+| Initia Feature | How InitPage Uses It |
+|----------------|----------------------|
+| **Own Appchain** | Every marketplace transaction = platform revenue. Zero gas leakage. |
+| **Session Keys (AutoSign)** | Agents sign once, trade freely. No wallet popup per purchase. |
+| **Interwoven Bridge** | Users deposit USDC from any Initia ecosystem chain. |
+| **Initia Usernames (.init)** | Human-readable agent profiles instead of hex addresses. |
+| **Social Login (Privy)** | Onboard with email/Google — no wallet setup required. |
 | **500ms Blocks** | Near-instant payment confirmation for real-time agent commerce. |
 
 ---
 
-## Architecture
+## What You Can Do
 
-```
-┌────────────────────────────────────────────────────────┐
-│                   AGENT SURFACES                        │
-│                                                         │
-│   Telegram Bot    Claude Desktop    CLI Agent    Web    │
-│   (OpenClaw)      (MCP Server)     (AI SDK)   (Next.js)│
-│        │               │              │           │     │
-│        └───────────────┼──────────────┘           │     │
-│                        ▼                          ▼     │
-│         ┌─────────────────────────────────────────┐     │
-│         │     Express Backend (TypeScript)         │     │
-│         │                                         │     │
-│         │  x402 Gateway — payment-gated resources │     │
-│         │  A2A Server  — agent-to-agent protocol  │     │
-│         │  AP2 Handler — Google shopping mandates  │     │
-│         │  ERC-8004    — agent identity & trust    │     │
-│         │  MongoDB     — state & analytics         │     │
-│         └──────────────┬──────────────────────────┘     │
-│                        │                                 │
-│         ┌──────────────┴──────────────────────────┐     │
-│         │     Next.js Frontend (InterwovenKit)     │     │
-│         │                                         │     │
-│         │  Marketplace explorer                   │     │
-│         │  Creator dashboard & profiles           │     │
-│         │  Wallet: AutoSign + Bridge + .init      │     │
-│         │  USDC Faucet                            │     │
-│         └─────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────┬───────────────────────────────┘
-                          │
-                          ▼
-              ┌───────────────────────┐
-              │   InitPage Appchain   │
-              │  (Initia MiniEVM)     │
-              │                       │
-              │  MockUSDC (ERC-20)    │
-              │  ERC-8004 Identity    │
-              │  ERC-8004 Reputation  │
-              │  ERC-8004 Validation  │
-              │                       │
-              │  Chain ID: superpage  │
-              │  ~500ms blocks        │
-              └───────────┬───────────┘
-                          │
-                          ▼
-              ┌───────────────────────┐
-              │   Initia L1 Testnet   │
-              │   (initiation-2)      │
-              │                       │
-              │  State proofs         │
-              │  Interwoven Bridge    │
-              │  Cross-chain deposits │
-              └───────────────────────┘
-```
+### As a Buyer (Human or Agent)
+- Browse and purchase APIs, articles, files, datasets
+- Shop physical products from Shopify stores with USDC
+- Check seller reputation before buying (ERC-8004)
+- Use MCP tools in Claude Desktop for hands-free shopping
+
+### As a Seller (Human or Agent)
+- Register as a merchant with one click (or one tool call)
+- Publish paywalled APIs (proxied to your upstream), articles, or files
+- Connect your Shopify store for physical product sales
+- Earn USDC directly to your wallet — zero platform fees
+- Build on-chain reputation from buyer feedback
+
+### As an AI Agent
+- **Buy** resources autonomously via x402, A2A, or MCP
+- **Sell** your own services (data analysis, content generation, API access)
+- **Build reputation** through verified on-chain transactions
+- **Discover** other agents and their capabilities via Agent Cards
 
 ---
 
-## x402 Payment Flow
+## Agent Integration
 
+### MCP Server — 12 Tools for Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "initpage": {
+      "command": "npx",
+      "args": ["-y", "superpage-mcp"],
+      "env": {
+        "WALLET_PRIVATE_KEY": "0x...",
+        "MERCHANT_URL": "https://init-api.superpa.ge"
+      }
+    }
+  }
+}
 ```
-Agent                     InitPage                 InitPage Appchain
-  │                          │                           │
-  │  GET /x402/resource/X    │                           │
-  │─────────────────────────>│                           │
-  │                          │                           │
-  │  402 {amount, recipient} │                           │
-  │<─────────────────────────│                           │
-  │                          │                           │
-  │  USDC.transfer(to, amt)  │                           │
-  │──────────────────────────┼──────────────────────────>│
-  │                          │                           │
-  │  GET /x402/resource/X    │     verify on-chain       │
-  │  X-PAYMENT: {txHash}     │──────────────────────────>│
-  │─────────────────────────>│<──────────────────────────│
-  │                          │                           │
-  │  200 OK + content        │                           │
-  │<─────────────────────────│                           │
+
+| Tool | What it does |
+|------|-------------|
+| `list_resources` | Browse all digital resources |
+| `x402_request` | Buy a paid resource (auto-pay on 402) |
+| `x402_preview` | Check price without paying |
+| `x402_wallet` | Check wallet balance |
+| `x402_send` | Send USDC to any address |
+| `list_stores` | List connected Shopify stores |
+| `browse_products` | Browse store products |
+| `x402_buy` | Full Shopify checkout with USDC |
+| `order_status` | Track order status |
+| `list_orders` | View completed orders |
+| `x402_discover` | Probe any URL for x402 support |
+| `search_resources` | Search resources by keyword |
+
+### A2A Protocol — Agent-to-Agent
+
+Discoverable at `/.well-known/agent.json`:
+
+```bash
+curl https://init-api.superpa.ge/.well-known/agent.json
+```
+
+Skills: `purchase`, `resource-access`, `ap2-shopping`, `erc8004-trust`
+
+### CLI Agent — Standalone
+
+```bash
+pnpm agent
+# Supports: Anthropic (Claude), OpenAI (GPT-4), Google (Gemini)
+# Agents can buy AND sell autonomously
 ```
 
 ---
 
 ## ERC-8004: Trustless Agent Identity
 
-InitPage implements [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for on-chain agent identity and reputation:
+On-chain identity and reputation — not self-reported claims:
 
-- **IdentityRegistry** — ERC-721 based agent NFTs with metadata, wallet binding, and URI storage
-- **ReputationRegistry** — On-chain feedback system with ratings, tags, and agent responses
-- **ValidationRegistry** — Third-party validator attestations for agent capabilities
+- **IdentityRegistry** — ERC-721 agent NFTs with metadata and wallet binding
+- **ReputationRegistry** — Feedback with ratings (1-5), tags, and agent responses
+- **ValidationRegistry** — Third-party attestations for agent capabilities
 
-Agents build verifiable reputation through on-chain transactions, not self-reported claims.
-
----
-
-## Features
-
-### MCP Server (Claude Desktop) — 12 Tools
-
-| Tool | Description |
-|------|-------------|
-| `x402_list_resources` | Browse all digital resources |
-| `x402_search_resources` | Search resources by keyword |
-| `x402_request` | Buy a paid resource (auto-pay on 402) |
-| `x402_preview` | Check price without paying |
-| `x402_wallet` | Check wallet balance |
-| `x402_send` | Send USDC to any address |
-| `x402_list_stores` | List Shopify stores |
-| `x402_browse_products` | Browse store products |
-| `x402_buy` | Full Shopify checkout with USDC |
-| `x402_order_status` | Check order status |
-| `x402_list_orders` | List completed orders |
-| `x402_discover` | Probe any URL for x402 support |
-
-### A2A Server (Agent-to-Agent)
-
-4 skills discoverable at `/.well-known/agent.json`:
-- **purchase** — Product purchase via x402
-- **resource-access** — Digital resource access
-- **ap2-shopping** — Google Agent Payments Protocol flow
-- **erc8004-trust** — On-chain trust & reputation queries
-
-### Web Marketplace
-
-- **Explore** — Browse resources with type filters and pricing
-- **Creator Dashboard** — Manage resources, view orders, analytics
-- **Creator Profiles** — Public pages with .init username display and tipping
-- **Faucet** — Mint test USDC on the InitPage appchain
+```
+Agent A wants to buy from Agent B
+  → Check Agent B's reputation score on-chain
+  → See 47 positive reviews, 4.8/5 average
+  → Verified by 2 validators
+  → Proceed with confidence
+```
 
 ---
 
@@ -245,18 +281,19 @@ Agents build verifiable reputation through on-chain transactions, not self-repor
 ```
 initpage/
 ├── .initia/
-│   └── submission.json         Hackathon submission metadata
+│   └── submission.json          # Hackathon submission metadata
 ├── packages/
-│   ├── frontend/               Next.js 16 + React 19 + InterwovenKit
-│   ├── backend/                Express + MongoDB + A2A + AP2 + x402
-│   ├── mcp-client/             MCP server for Claude Desktop (12 tools)
-│   ├── ai-agent/               Standalone AI agent (multi-LLM)
-│   ├── x402-sdk-eth/           Payment verification SDK
-│   └── contracts/              Solidity contracts + deploy scripts
+│   ├── frontend/                # Next.js 16 + React 19 + InterwovenKit
+│   ├── backend/                 # Express + MongoDB + x402 + A2A + MCP + Shopify
+│   ├── mcp-client/              # MCP server for Claude Desktop (12 tools)
+│   ├── ai-agent/                # Multi-LLM CLI agent (buy + sell)
+│   ├── x402-sdk-eth/            # Payment verification SDK
+│   └── contracts/               # Solidity: MockUSDC + ERC-8004 registries
 ├── scripts/
-│   ├── fix-genesis.py          Fix rollup genesis balances
-│   └── patch-cosmjs.js         Postinstall fix for cosmjs-types exports
-└── package.json                pnpm workspace root
+│   ├── fix-genesis.py           # Fix rollup genesis balances
+│   └── patch-cosmjs.js          # Postinstall cosmjs-types fix
+├── dev.sh                       # One-command dev server
+└── package.json                 # pnpm workspace root
 ```
 
 ---
@@ -266,7 +303,7 @@ initpage/
 ### Prerequisites
 
 - Node.js 22+ and pnpm 10+
-- MongoDB running on localhost
+- MongoDB (local or Atlas)
 - [Weave CLI](https://docs.initia.xyz/developers/developer-guides/tools/clis/weave-cli) for rollup
 
 ### 1. Clone & Install
@@ -280,56 +317,30 @@ pnpm install
 ### 2. Start the Rollup
 
 ```bash
-# Install weave CLI
 brew install initia-labs/tap/weave
-
-# Setup gas station (one-time)
 weave gas-station setup
-
-# Fund gas station with INIT from faucet:
-# https://faucet.testnet.initia.xyz/
-
-# Launch rollup
-weave rollup launch
-# Select: Testnet → EVM → chain-id "superpage"
+# Fund gas station: https://faucet.testnet.initia.xyz/
+weave rollup launch  # Select: Testnet → EVM → chain-id "initpage"
 ```
 
 ### 3. Deploy Contracts
 
 ```bash
-# Set your deployer private key
 export WALLET_PRIVATE_KEY=0x...
-
-# Compile and deploy all contracts
-cd packages/contracts
-pnpm compile
-pnpm deploy:initia
+cd packages/contracts && pnpm compile && pnpm deploy:initia
 ```
 
-### 4. Environment Setup
+### 4. Configure & Run
 
 ```bash
 cp packages/backend/.env.sample packages/backend/.env
-# Edit with your wallet key and contract addresses
-```
+# Edit .env with your wallet key, contract addresses, MongoDB URI
 
-Key variables:
-```bash
-X402_CHAIN=initia-testnet
-WALLET_PRIVATE_KEY=0x...
-X402_RECIPIENT_ADDRESS=0x...
-JWT_SECRET=your-secret
-```
-
-### 5. Start Development
-
-```bash
+ulimit -n 10240  # macOS file descriptor limit
 ./dev.sh
 ```
 
-This starts:
-- **Frontend**: http://localhost:3000
-- **Backend**: http://localhost:1337
+Frontend: http://localhost:3000 | Backend: http://localhost:1337
 
 ---
 
@@ -337,32 +348,26 @@ This starts:
 
 | Layer | Technology |
 |-------|------------|
-| **Appchain** | Initia MiniEVM (Solidity, 500ms blocks) |
-| **Frontend** | Next.js 16, React 19, InterwovenKit v2.5.1, Tailwind CSS 4 |
+| **Appchain** | Initia MiniEVM (Solidity 0.8.24, ~500ms blocks) |
+| **Frontend** | Next.js 16, React 19, InterwovenKit, Tailwind CSS 4 |
 | **Backend** | Express, TypeScript, MongoDB |
-| **Smart Contracts** | Solidity 0.8.24 (MockUSDC, ERC-8004 registries) |
-| **Wallet** | InterwovenKit (AutoSign, Bridge, .init usernames, social login) |
-| **Agent Protocols** | x402, A2A (JSON-RPC 2.0), AP2, MCP, ERC-8004 |
-| **AI** | Vercel AI SDK (Anthropic, OpenAI, Google) |
+| **Smart Contracts** | MockUSDC (ERC-20), ERC-8004 Identity/Reputation/Validation |
+| **Wallet** | InterwovenKit (AutoSign, Bridge, .init usernames, Privy social login) |
+| **Agent Protocols** | x402 (HTTP 402), A2A (JSON-RPC 2.0), AP2, MCP |
+| **AI Models** | Vercel AI SDK — Anthropic, OpenAI, Google |
+| **Commerce** | Shopify API (physical products + USDC checkout) |
 
 ---
 
-## Market Understanding
+## Live Deployment
 
-**Target Users:**
-- AI agent developers who need their agents to transact autonomously
-- Content creators who want to monetize APIs, datasets, and guides
-- Developers building agent-to-agent commerce workflows
-
-**Competitive Landscape:**
-- Traditional marketplaces (Gumroad, RapidAPI) require human payment flows
-- Existing crypto payment solutions don't support agent-native discovery and purchasing
-- No platform combines x402 + ERC-8004 + agent commerce on a dedicated appchain
-
-**Revenue Model:**
-- Platform fee on every marketplace transaction (captured at the appchain level)
-- Zero gas leakage — every transaction on InitPage generates protocol revenue
-- Creator fees for premium listings and analytics
+| Service | URL |
+|---------|-----|
+| Frontend | https://init.superpa.ge |
+| Backend API | https://init-api.superpa.ge |
+| Agent Card | https://init-api.superpa.ge/.well-known/agent.json |
+| Health Check | https://init-api.superpa.ge/health |
+| Resources | https://init-api.superpa.ge/x402/resources |
 
 ---
 
