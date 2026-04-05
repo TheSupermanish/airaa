@@ -154,6 +154,13 @@ export async function handleVerifySignature(req: Request, res: Response) {
           walletAddress: normalizedAddress,
           name: `Creator ${normalizedAddress.slice(0, 6)}...`,
         });
+
+        // Initialize account on Initia Cosmos layer (async, don't block auth)
+        import("../utils/initia-account.js").then(({ initializeInitiaAccount }) => {
+          initializeInitiaAccount(normalizedAddress).catch((err) =>
+            console.warn("[Auth] Failed to auto-initialize Initia account:", err.message)
+          );
+        });
       } catch (error) {
         console.error("Creator creation error:", error);
         return res.status(500).json({ error: "Failed to create account" });

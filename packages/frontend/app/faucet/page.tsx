@@ -33,12 +33,37 @@ const AMOUNTS = [
 type FaucetStatus = "idle" | "switching" | "minting" | "confirming" | "success" | "error";
 
 export default function FaucetPage() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chainId: walletChainId } = useAccount();
   const currentChainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const isWrongChain = isConnected && currentChainId !== PAYMENT_CHAIN_ID;
   const { openConnect } = useInterwovenKit();
   const { writeContractAsync } = useWriteContract();
+
+  // Check if wallet is on wrong chain
+  const isWrongChain = isConnected && walletChainId !== PAYMENT_CHAIN_ID;
+
+  // Manually add and switch to InitPage chain via MetaMask
+  const switchToInitPage = async () => {
+    try {
+      // Try wagmi switchChain first
+      switchChain?.({ chainId: PAYMENT_CHAIN_ID });
+    } catch {
+      // Fallback: manually add chain via window.ethereum
+      try {
+        await window.ethereum?.request({
+          method: "wallet_addEthereumChain",
+          params: [{
+            chainId: `0x${PAYMENT_CHAIN_ID.toString(16)}`,
+            chainName: PAYMENT_CHAIN.name,
+            nativeCurrency: { name: "GAS", symbol: "GAS", decimals: 18 },
+            rpcUrls: ["http://localhost:8545"],
+          }],
+        });
+      } catch (e) {
+        console.error("Failed to add chain:", e);
+      }
+    }
+  };
 
   const [status, setStatus] = useState<FaucetStatus>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -170,7 +195,7 @@ export default function FaucetPage() {
                 </div>
               </div>
               <button
-                onClick={() => switchChain?.({ chainId: PAYMENT_CHAIN_ID })}
+                onClick={switchToInitPage}
                 className="w-full bg-yellow-500 text-black hover:bg-yellow-400 rounded-xl font-bold py-3 transition-all flex items-center justify-center gap-2"
               >
                 <ArrowRightLeft className="h-4 w-4" />
